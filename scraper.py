@@ -30,7 +30,7 @@ def scrape_url(url: str):
         return f"Erreur lors du scraping de l'URL: {str(e)}" 
 
 
-def scrape_pdf(file_like_object):
+def extract_pdf(file_like_object):
     """Extrait le texte d'un fichier PDF."""
     try:
         with pdfplumber.open(file_like_object) as pdf:
