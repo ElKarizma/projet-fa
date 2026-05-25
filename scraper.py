@@ -9,8 +9,8 @@ def clean(txt: str):
 
     else:
         txt = re.sub(r'\s+', ' ', txt)
-        text = re.sub(r'[^a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]', '', text)
-    return text.strip().lower()
+        txt = re.sub(r'[^a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]', '', txt)
+    return txt.strip().lower()
 
 
 def scrape_url(url: str):
@@ -31,12 +31,15 @@ def scrape_url(url: str):
 
 
 def extract_pdf(file_like_object):
-    """Extrait le texte d'un fichier PDF."""
+    """Extrait le texte d'un fichier PDF téléversé."""
+    text = ""  # On initialise la variable TOUT EN HAUT, avant le bloc try
     try:
         with pdfplumber.open(file_like_object) as pdf:
-            text = ""
             for page in pdf.pages:
-                text += page.extract_text() + "\n"
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text + " "
         return clean(text)
     except Exception as e:
-        return f"Erreur lors du scraping du PDF: {str(e)}"
+        # Maintenant 'text' existe à coup sûr, donc cette ligne ne plantera plus
+        return f"Erreur lors de la lecture du PDF: {str(e)}"
